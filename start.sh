@@ -70,7 +70,7 @@ done
 RSYNC=$!
 BACKGROUND_TASKS+=($RSYNC)
 
-sleep 2
+sleep 10
 clamav-milter --config-file=/etc/clamav/clamav-milter.conf &
 MILTER=$!
 BACKGROUND_TASKS+=($MILTER)
