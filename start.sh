@@ -26,6 +26,10 @@ sed -i '/^\s*$/d' /var/lib/clamav/whitelist.ign2
 
 BACKGROUND_TASKS=()
 
+nice -n10 clamd &
+CLAMD=$!
+BACKGROUND_TASKS+=($CLAMD)
+
 (
 while true; do
   sleep 1m
@@ -33,7 +37,8 @@ while true; do
   sleep 1h
 done
 ) &
-BACKGROUND_TASKS+=($!)
+FRESHCLAM=$!
+BACKGROUND_TASKS+=($FRESHCLAM)
 
 (
 while true; do
@@ -61,18 +66,18 @@ while true; do
   sleep 30h
 done
 ) &
-BACKGROUND_TASKS+=($!)
+RSYNC=$!
+BACKGROUND_TASKS+=($RSYNC)
 
-nice -n10 clamd &
-BACKGROUND_TASKS+=($!)
-
+sleep 2
 clamav-milter --config-file=/etc/clamav/clamav-milter.conf &
-BACKGROUND_TASKS+=($!)
+MILTER=$!
+BACKGROUND_TASKS+=($MILTER)
 
 while true; do
   for bg_task in ${BACKGROUND_TASKS[*]}; do
     if ! kill -0 ${bg_task} 1>&2; then
-      echo "Worker ${bg_task} died, stopping container waiting for respawn..."
+      echo "Worker ${bg_task} died, stopping container waiting for respawn... (Milter: $MILTER, Rsync: $RSYNC, Freshclam: $FRESHCLAM, Clamd: $CLAMD)"
       exit 1
     fi
     sleep 10
