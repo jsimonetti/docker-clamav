@@ -18,6 +18,7 @@ chown clamav:clamav -R /var/lib/clamav /run/clamav
 chmod 755 /var/lib/clamav
 chmod 644 -R /var/lib/clamav/*
 chmod 750 /run/clamav
+rm -f /run/clamav/*
 
 echo "Stating whitelist.ign2"
 stat /var/lib/clamav/whitelist.ign2
