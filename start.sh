@@ -26,7 +26,7 @@ sed -i '/^\s*$/d' /var/lib/clamav/whitelist.ign2
 
 BACKGROUND_TASKS=()
 
-nice -n10 clamd &
+nice -n10 clamd -c /etc/clamav/clamd.conf &
 CLAMD=$!
 BACKGROUND_TASKS+=($CLAMD)
 
