@@ -4,4 +4,6 @@ RUN apk add --no-cache clamav-daemon clamav-milter freshclam rsync bash bind-too
 
 ADD ./start.sh /start.sh
 
+EXPOSE	3310/tcp
+
 CMD [ "/start.sh" ]
